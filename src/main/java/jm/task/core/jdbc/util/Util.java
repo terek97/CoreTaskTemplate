@@ -11,7 +11,7 @@ public class Util {
     private static final String DB_NAME = "root";
     private static final String DB_PASS = "1119002";
 
-    public Connection getConnection() {
+    public static Connection getConnection() {
         try {
             Class.forName(DB_DRIVER);
         } catch (ClassNotFoundException e) {
