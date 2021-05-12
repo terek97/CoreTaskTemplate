@@ -2,11 +2,12 @@ package jm.task.core.jdbc.service;
 
 import jm.task.core.jdbc.dao.UserDaoJDBCImpl;
 import jm.task.core.jdbc.model.User;
+import jm.task.core.jdbc.util.Util;
 
 import java.util.List;
 
 public class UserServiceImpl implements UserService {
-    private UserDaoJDBCImpl userDAO = new UserDaoJDBCImpl();
+    private final UserDaoJDBCImpl userDAO = new UserDaoJDBCImpl();
 
     public void createUsersTable() {
         userDAO.createUsersTable();
@@ -30,5 +31,10 @@ public class UserServiceImpl implements UserService {
 
     public void cleanUsersTable() {
         userDAO.cleanUsersTable();
+    }
+
+    @Override
+    public void close() throws Exception {
+        Util.closeConnection();
     }
 }
