@@ -18,14 +18,12 @@ public class UserDaoJDBCImpl implements UserDao {
     }
 
     public void createUsersTable() {
-
-        String query = "CREATE TABLE IF NOT EXISTS users (" +
-                "id INT(64) NOT NULL AUTO_INCREMENT, " +
-                "name VARCHAR(45) NOT NULL, " +
-                "lastname VARCHAR(45) NOT NULL, " +
-                "age INT NOT NULL, PRIMARY KEY (id))";
         try (Statement statement = connection.createStatement()) {
-            statement.execute(query);
+            statement.executeUpdate("CREATE TABLE IF NOT EXISTS users (" +
+                    "id INT(64) NOT NULL AUTO_INCREMENT, " +
+                    "name VARCHAR(45) NOT NULL, " +
+                    "lastname VARCHAR(45) NOT NULL, " +
+                    "age INT NOT NULL, PRIMARY KEY (id))");
         } catch (SQLException e) {
             e.getMessage();
         }
@@ -33,28 +31,31 @@ public class UserDaoJDBCImpl implements UserDao {
 
     public void dropUsersTable() {
         try (Statement statement = connection.createStatement()) {
-            statement.execute("DROP TABLE IF EXISTS users");
+            statement.executeUpdate("DROP TABLE IF EXISTS users");
         } catch (SQLException e) {
             e.getMessage();
         }
     }
 
     public void saveUser(String name, String lastName, byte age) {
-        String query = String.format("INSERT INTO users (name, lastname, age) " +
-                "VALUES (\"%s\", \"%s\", %d)", name, lastName, age);
 
-        try (Statement statement = connection.createStatement()) {
-            statement.execute(query);
+        try (PreparedStatement ps = connection.prepareStatement("INSERT INTO users (name, lastname, age) " +
+                "VALUES (?, ?, ?)")) {
+            ps.setString(1, name);
+            ps.setString(2, lastName);
+            ps.setByte(3, age);
+            ps.executeUpdate();
+
         } catch (SQLException e) {
             e.getMessage();
         }
     }
 
     public void removeUserById(long id) {
-        String query = String.format("DELETE FROM users WHERE id = %d", id);
+        try (PreparedStatement ps = connection.prepareStatement("DELETE FROM users WHERE id = ?")) {
+            ps.setLong(1, id);
+            ps.execute();
 
-        try (Statement statement = connection.createStatement()) {
-            statement.execute(query);
         } catch (SQLException e) {
             e.getMessage();
         }

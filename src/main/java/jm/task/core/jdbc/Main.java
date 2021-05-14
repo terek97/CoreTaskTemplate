@@ -14,7 +14,7 @@ public class Main {
                 System.out.println("User с именем – Name" + i + " добавлен в базу данных");
             }
             System.out.println(userService.getAllUsers()); //printing all users
-            userService.cleanUsersTable(); //table cleaning
+            userService.removeUserById(1); //removing user from table by ID
             userService.dropUsersTable(); //table removing
         } catch (Exception e) {
             e.printStackTrace();
